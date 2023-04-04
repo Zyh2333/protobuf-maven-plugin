@@ -297,6 +297,12 @@ abstract class AbstractProtocMojo extends AbstractMojo {
     )
     protected boolean attachProtoSources;
 
+    @Parameter(
+            required = false,
+            defaultValue = "false"
+    )
+    protected boolean useExperimentalOptional;
+
     /**
      * If set to {@code true}, all command line arguments to protoc will be written to a file,
      * and only a path to that file will be passed to protoc on the command line.
@@ -623,6 +629,7 @@ abstract class AbstractProtocMojo extends AbstractMojo {
         }
         protocBuilder.setTempDirectory(tempDirectory);
         protocBuilder.useArgumentFile(useArgumentFile);
+        protocBuilder.useExperimentalOptional(useExperimentalOptional);
     }
 
     /**

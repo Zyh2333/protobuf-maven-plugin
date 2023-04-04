@@ -104,6 +104,8 @@ final class Protoc {
 
     private final boolean includeSourceInfoInDescriptorSet;
 
+    private final boolean useExperimentalOptional;
+
     /**
      * A buffer to consume standard output from the {@code protoc} executable.
      */
@@ -168,7 +170,8 @@ final class Protoc {
             final String nativePluginExecutable,
             final String nativePluginParameter,
             final File tempDirectory,
-            final boolean useArgumentFile
+            final boolean useArgumentFile,
+            final boolean useExperimentalOptional
     ) {
         if (executable == null) {
             throw new MojoConfigurationException("'executable' is null");
@@ -200,6 +203,7 @@ final class Protoc {
         this.useArgumentFile = useArgumentFile;
         this.error = new StringStreamConsumer();
         this.output = new StringStreamConsumer();
+        this.useExperimentalOptional = useExperimentalOptional;
     }
 
     /**
@@ -310,6 +314,9 @@ final class Protoc {
             if (includeSourceInfoInDescriptorSet) {
                 command.add("--include_source_info");
             }
+        }
+        if (useExperimentalOptional) {
+            command.add("--experimental_allow_proto3_optional");
         }
         return command;
     }
@@ -505,6 +512,8 @@ final class Protoc {
         private boolean includeSourceInfoInDescriptorSet;
 
         private boolean useArgumentFile;
+
+        private boolean useExperimentalOptional;
 
         /**
          * Constructs a new builder.
@@ -749,6 +758,11 @@ final class Protoc {
             return this;
         }
 
+        public Builder useExperimentalOptional(final boolean useExperimentalOptional) {
+            this.useExperimentalOptional = useExperimentalOptional;
+            return this;
+        }
+
         private void checkProtoFileIsInProtopath(final File protoFile) {
             if (!protoFile.isFile()) {
                 throw new MojoConfigurationException("Not a regular file: " + protoFile.getAbsolutePath());
@@ -862,7 +876,8 @@ final class Protoc {
                     nativePluginExecutable,
                     nativePluginParameter,
                     tempDirectory,
-                    useArgumentFile);
+                    useArgumentFile,
+                    useExperimentalOptional);
         }
     }
 }
